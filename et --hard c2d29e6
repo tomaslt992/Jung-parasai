@@ -1,0 +1,36 @@
+[33mc2d29e6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: rebase (abort): returning to refs/heads/main
+[33m446afda[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: pull --rebase origin main (start): checkout 446afdab3e6a8a773f6f28c9a09cddcf3d7ae167
+[33mc2d29e6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{2}: checkout: moving from main to main
+[33mc2d29e6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{3}: commit: Atnaujinti failai viešam matymui
+[33mf270953[m HEAD@{4}: commit: Atnaujinti parašai: fiksuotas ikonų dydis, width=350px, pataisyta email ir phone struktūra
+[33m8c97a38[m HEAD@{5}: pull --rebase origin main (finish): returning to refs/heads/main
+[33m8c97a38[m HEAD@{6}: pull --rebase origin main (pick): Atnaujinti parašai: fiksuotas ikonų dydis, width=350px, pataisyta email ir phone struktūra
+[33m77c2673[m HEAD@{7}: pull --rebase origin main (start): checkout 77c2673d40ab43ae1f17c6f2794224ee405ff6dd
+[33mebdd325[m HEAD@{8}: commit: Atnaujinti parašai: fiksuotas ikonų dydis, width=350px, pataisyta email ir phone struktūra
+[33m3a3f79c[m HEAD@{9}: commit: atnaujinau parasas.html
+[33ma4061f2[m HEAD@{10}: commit: atnaujinau parasas.html
+[33mbf44e62[m HEAD@{11}: commit: atnaujinau parasas.html
+[33mae27ebe[m HEAD@{12}: commit: atnaujinau parasas.html
+[33m4f12242[m HEAD@{13}: commit: atnaujinau parasas.html
+[33mb6736dd[m HEAD@{14}: commit: atnaujinau parasas.html
+[33m3d8711b[m HEAD@{15}: commit: atnaujinau parasas.html
+[33m0e6855d[m HEAD@{16}: commit: atnaujinau parasas.html
+[33mf1ca3f5[m HEAD@{17}: commit: atnaujinau parasas.html
+[33m48eb478[m HEAD@{18}: commit: atnaujinau parasas.html
+[33m01f5c6d[m HEAD@{19}: commit: atnaujinau parasas.html
+[33m723b229[m HEAD@{20}: commit: atnaujinau parasas.html
+[33me8eff42[m HEAD@{21}: commit: atnaujinau parasas.html
+[33m02bec34[m HEAD@{22}: commit: atnaujinau parasas.html
+[33m23b4b19[m HEAD@{23}: commit: atnaujinau parasas.html
+[33m0ce7351[m HEAD@{24}: commit: atnaujinau parasas.html
+[33m08c6f94[m HEAD@{25}: commit: atnaujinau parasas.html
+[33mf94b237[m HEAD@{26}: commit: atnaujinau parasas.html
+[33m8f319e5[m HEAD@{27}: commit: atnaujinau parasas.html
+[33m411dc8a[m HEAD@{28}: commit: atnaujinau parasas.html
+[33m52f9da4[m HEAD@{29}: commit: atnaujinau parasas.html
+[33m7af0d12[m HEAD@{30}: commit: atnaujinau parasas.html
+[33ma99d23c[m HEAD@{31}: commit: atnaujinau parasas.html
+[33m1e338c7[m HEAD@{32}: commit: atnaujinau parasas.html
+[33md72aa23[m HEAD@{33}: commit: atnaujinau parasas.html
+[33m4055bc6[m HEAD@{34}: commit: Atnaujinau parasas.html
+[33m17a7553[m HEAD@{35}: clone: from https://github.com/tomaslt992/Jung-para-ai
