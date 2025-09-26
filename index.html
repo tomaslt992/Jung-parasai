@@ -2,18 +2,10 @@
 <html lang="lt">
 <head>
   <meta charset="UTF-8">
-  <title>Failų sąrašas</title>
+  <title>Failų naršyklė</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #fafafa;
-      padding: 20px;
-    }
-    h1 {
-      margin-bottom: 20px;
-      font-size: 20px;
-      color: #333;
-    }
+    body { font-family: Arial, sans-serif; background: #fafafa; padding: 20px; }
+    h1 { margin-bottom: 20px; font-size: 20px; color: #333; }
     .file-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -32,71 +24,72 @@
       text-decoration: none;
       color: #333;
     }
-    .file:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transform: translateY(-2px);
-    }
-    .file-icon {
-      font-size: 40px;
-      margin-bottom: 10px;
-      color: #4285f4;
-    }
-    .file-name {
-      font-size: 14px;
-      word-wrap: break-word;
-    }
+    .file:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); transform: translateY(-2px); }
+    .file-icon { font-size: 40px; margin-bottom: 10px; }
+    .file-name { font-size: 14px; word-wrap: break-word; }
+    .back-link { margin-bottom: 20px; display: inline-block; }
   </style>
 </head>
 <body>
-  <h1>Jung parašų failai</h1>
+  <h1>Jung signatures</h1>
+  <div id="back"></div>
   <div class="file-grid" id="failu-sarasas"></div>
 
   <script>
-const user = "tomaslt992";   // tavo GitHub username
-const repo = "Jung-parasai"; // repo pavadinimas
-const branch = "main";       // šaka
+    const user = "tomaslt992";
+    const repo = "Jung-parasai";
+    const branch = "main";
 
-function loadFiles(path = "") {
-  fetch(`https://api.github.com/repos/${user}/${repo}/contents/${path}?ref=${branch}`)
-    .then(res => res.json())
-    .then(files => {
-      let list = document.getElementById("failu-sarasas");
-      list.innerHTML = ""; // išvalom esamą sąrašą
+    // pasiimam URL param "path"
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPath = urlParams.get("path") || "";
 
-      files.forEach(file => {
-        let a = document.createElement("a");
-        a.className = "file";
+    // API URL
+    const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${currentPath}`;
 
-        let icon = document.createElement("div");
-        icon.className = "file-icon";
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(files => {
+        let list = document.getElementById("failu-sarasas");
 
-        let name = document.createElement("div");
-        name.className = "file-name";
-        name.innerText = file.name;
-
-        if (file.type === "dir") {
-          icon.innerHTML = "📁";
-          a.href = "#";
-          a.onclick = (e) => {
-            e.preventDefault();
-            loadFiles(file.path); // atidaro aplanko turinį
-          };
-        } else if (file.name.endsWith(".html")) {
-          icon.innerHTML = "📄";
-          a.href = file.path; // veiks su GitHub Pages
-        } else {
-          return; // nerodom kitų failų tipų
+        // jei esame subfolderyje -> rodome "grįžti atgal"
+        if (currentPath) {
+          let backDiv = document.getElementById("back");
+          let parentPath = currentPath.split("/").slice(0, -1).join("/");
+          let backLink = document.createElement("a");
+          backLink.href = parentPath ? `?path=${parentPath}` : "index.html";
+          backLink.innerText = "⬅ Grįžti atgal";
+          backLink.className = "back-link";
+          backDiv.appendChild(backLink);
         }
 
-        a.appendChild(icon);
-        a.appendChild(name);
-        list.appendChild(a);
+        files.forEach(file => {
+          let a = document.createElement("a");
+          a.className = "file";
+
+          let icon = document.createElement("div");
+          icon.className = "file-icon";
+
+          let name = document.createElement("div");
+          name.className = "file-name";
+          name.innerText = file.name;
+
+          if (file.type === "file" && file.name.endsWith(".html")) {
+            a.href = file.path; // GitHub Pages atidarys HTML
+            icon.innerHTML = "📄";
+          }
+          else if (file.type === "dir") {
+            a.href = `?path=${file.path}`;
+            icon.innerHTML = "📁";
+          } else {
+            return;
+          }
+
+          a.appendChild(icon);
+          a.appendChild(name);
+          list.appendChild(a);
+        });
       });
-    });
-}
-
-loadFiles(); // paleidžiam nuo root
-
   </script>
 </body>
 </html>
