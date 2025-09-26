@@ -52,34 +52,51 @@
   <div class="file-grid" id="failu-sarasas"></div>
 
   <script>
-    const user = "tomaslt992";   // tavo GitHub username
-    const repo = "Jung-parasai"; // repo pavadinimas
-    const branch = "main";       // šaka
+const user = "tomaslt992";   // tavo GitHub username
+const repo = "Jung-parasai"; // repo pavadinimas
+const branch = "main";       // šaka
 
-    fetch(`https://api.github.com/repos/${user}/${repo}/contents/`)
-      .then(res => res.json())
-      .then(files => {
-        let list = document.getElementById("failu-sarasas");
-        files.forEach(file => {
-          if (file.name.endsWith(".html")) {
-            let a = document.createElement("a");
-            a.href = file.name;
-            a.className = "file";
+function loadFiles(path = "") {
+  fetch(`https://api.github.com/repos/${user}/${repo}/contents/${path}?ref=${branch}`)
+    .then(res => res.json())
+    .then(files => {
+      let list = document.getElementById("failu-sarasas");
+      list.innerHTML = ""; // išvalom esamą sąrašą
 
-            let icon = document.createElement("div");
-            icon.className = "file-icon";
-            icon.innerHTML = "📄"; // galima pakeisti į SVG ikoną
+      files.forEach(file => {
+        let a = document.createElement("a");
+        a.className = "file";
 
-            let name = document.createElement("div");
-            name.className = "file-name";
-            name.innerText = file.name;
+        let icon = document.createElement("div");
+        icon.className = "file-icon";
 
-            a.appendChild(icon);
-            a.appendChild(name);
-            list.appendChild(a);
-          }
-        });
+        let name = document.createElement("div");
+        name.className = "file-name";
+        name.innerText = file.name;
+
+        if (file.type === "dir") {
+          icon.innerHTML = "📁";
+          a.href = "#";
+          a.onclick = (e) => {
+            e.preventDefault();
+            loadFiles(file.path); // atidaro aplanko turinį
+          };
+        } else if (file.name.endsWith(".html")) {
+          icon.innerHTML = "📄";
+          a.href = file.path; // veiks su GitHub Pages
+        } else {
+          return; // nerodom kitų failų tipų
+        }
+
+        a.appendChild(icon);
+        a.appendChild(name);
+        list.appendChild(a);
       });
+    });
+}
+
+loadFiles(); // paleidžiam nuo root
+
   </script>
 </body>
 </html>
