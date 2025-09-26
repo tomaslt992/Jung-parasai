@@ -58,7 +58,7 @@
           let parentPath = currentPath.split("/").slice(0, -1).join("/");
           let backLink = document.createElement("a");
           backLink.href = parentPath ? `?path=${parentPath}` : "index.html";
-          backLink.innerText = "⬅ Grįžti atgal";
+          backLink.innerText = "⬅ Back";
           backLink.className = "back-link";
           backDiv.appendChild(backLink);
         }
