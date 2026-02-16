@@ -29,6 +29,7 @@
     .file-name { font-size: 14px; word-wrap: break-word; }
     .back-link { margin-bottom: 20px; display: inline-block; }
   </style>
+  <meta name="robots" content="noindex, nofollow">
 </head>
 <body>
   <h1>Jung signatures</h1>
@@ -90,6 +91,14 @@
           list.appendChild(a);
         });
       });
+
+const password = "jung!2026";
+
+const entered = prompt("Enter password to access the signatures:");
+if (entered !== password) {
+  document.body.innerHTML = "<h2>Access denied</h2>";
+  throw new Error("Wrong password");
+}
   </script>
 </body>
 </html>
