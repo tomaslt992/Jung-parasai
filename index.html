@@ -1,96 +1,359 @@
 <!DOCTYPE html>
-<html lang="lt">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Failų naršyklė</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>JUNG Signatures</title>
+  <script src="./auth.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; background: #fafafa; padding: 20px; }
-    h1 { margin-bottom: 20px; font-size: 20px; color: #333; }
-    .file-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 20px;
+    :root {
+      --bg: #f3f4f6;
+      --surface: #ffffff;
+      --surface-soft: #f7fafb;
+      --line: #d6dde3;
+      --text: #111418;
+      --muted: #60707c;
+      --jung: #1980A0;
+      --jung-deep: #125a71;
+      --shadow: 0 18px 40px rgba(17, 20, 24, 0.08);
+      --radius: 18px;
+      --font: "IBM Plex Sans", "Segoe UI", sans-serif;
     }
-    .file {
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(25, 128, 160, 0.14), transparent 26%),
+        linear-gradient(180deg, #edf2f5 0%, var(--bg) 100%);
+    }
+
+    a { color: inherit; }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .top-card,
+    .library {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(214, 221, 227, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .top-card {
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 15px;
-      border-radius: 8px;
-      background: white;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      transition: 0.2s;
-      text-align: center;
-      text-decoration: none;
-      color: #333;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 180px;
     }
-    .file:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); transform: translateY(-2px); }
-    .file-icon { font-size: 40px; margin-bottom: 10px; }
-    .file-name { font-size: 14px; word-wrap: break-word; }
-    .back-link { margin-bottom: 20px; display: inline-block; }
+
+    .top-title {
+      margin: 0 0 12px;
+      font-size: 26px;
+      letter-spacing: -0.03em;
+    }
+
+    .top-copy,
+    .empty {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .action:hover {
+      transform: translateY(-1px);
+    }
+
+    .action-primary {
+      background: var(--jung);
+      color: #fff;
+      box-shadow: 0 14px 24px rgba(25, 128, 160, 0.18);
+    }
+
+    .action-secondary {
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+      color: var(--text);
+    }
+
+    .library {
+      padding: 22px;
+    }
+
+    .library-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .library-title {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .crumbs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 132px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fff;
+      text-decoration: none;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(25, 128, 160, 0.4);
+      box-shadow: 0 14px 28px rgba(17, 20, 24, 0.08);
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(25, 128, 160, 0.1);
+      color: var(--jung-deep);
+      font-size: 20px;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .card-copy {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 960px) {
+      .top-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 18px 14px 28px;
+      }
+
+      .top-card,
+      .library {
+        padding: 18px;
+      }
+
+      .library-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
-  <meta name="robots" content="noindex, nofollow">
-<script src="/Jung-parasai/auth.js"></script>
 </head>
 <body>
-  <h1>Jung signatures</h1>
-  <div id="back"></div>
-  <div class="file-grid" id="failu-sarasas"></div>
+  <main class="page">
+    <section class="top-grid">
+      <div class="top-card">
+        <div>
+          <h2 class="top-title">Signature Configurator</h2>
+          <p class="top-copy">
+            Use `Basic` for quick contact entry or `Advanced` for full template editing with photos, social icons, and links.
+          </p>
+        </div>
+        <a class="action action-primary" href="configurator.html?v=20260518-29">Open configurator</a>
+      </div>
+    </section>
+
+    <section class="library" id="archive">
+      <div class="library-header">
+        <h2 class="library-title">Signature Archive</h2>
+        <a class="action action-secondary" href="configurator.html?v=20260518-29">Create new signature</a>
+      </div>
+      <div class="crumbs" id="back"></div>
+      <div class="grid" id="fileList"></div>
+      <p class="empty" id="emptyState" hidden>Nothing found here.</p>
+    </section>
+  </main>
 
   <script>
     const user = "tomaslt992";
     const repo = "Jung-parasai";
-    const branch = "main";
-
-    // pasiimam URL param "path"
     const urlParams = new URLSearchParams(window.location.search);
     const currentPath = urlParams.get("path") || "";
-
-    // API URL
     const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${currentPath}`;
 
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(files => {
-        let list = document.getElementById("failu-sarasas");
+    const rootFolders = [
+      "EE Signatures",
+      "KZ signatures",
+      "LT Signatures",
+      "LV Signatures",
+      "Nordic signatures",
+      "PL Signatures",
+      "UA Signatures"
+    ];
 
-        // jei esame subfolderyje -> rodome "grįžti atgal"
-        if (currentPath) {
-          let backDiv = document.getElementById("back");
-          let parentPath = currentPath.split("/").slice(0, -1).join("/");
-          let backLink = document.createElement("a");
-          backLink.href = parentPath ? `?path=${parentPath}` : "index.html";
-          backLink.innerText = "⬅ Back";
-          backLink.className = "back-link";
-          backDiv.appendChild(backLink);
+    const back = document.getElementById("back");
+    const fileList = document.getElementById("fileList");
+    const emptyState = document.getElementById("emptyState");
+
+    function createCard({ href, icon, title, copy }) {
+      const anchor = document.createElement("a");
+      anchor.href = href;
+      anchor.className = "card";
+      anchor.innerHTML = `
+        <span class="card-icon">${icon}</span>
+        <div>
+          <p class="card-title">${title}</p>
+          <p class="card-copy">${copy}</p>
+        </div>
+      `;
+      return anchor;
+    }
+
+    if (!currentPath) {
+      rootFolders.forEach((folderName) => {
+        fileList.appendChild(createCard({
+          href: `?path=${encodeURIComponent(folderName)}`,
+          icon: "📁",
+          title: folderName,
+          copy: "Open this signature folder."
+        }));
+      });
+    }
+
+    if (currentPath) {
+      const parentPath = currentPath.split("/").slice(0, -1).join("/");
+      const backLink = document.createElement("a");
+      backLink.href = parentPath ? `?path=${encodeURIComponent(parentPath)}` : "index.html";
+      backLink.innerText = "← Back";
+      backLink.className = "back-link";
+      back.appendChild(backLink);
+    }
+
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((files) => {
+        if (!currentPath) {
+          return;
         }
 
-        files.forEach(file => {
-          let a = document.createElement("a");
-          a.className = "file";
+        if (!Array.isArray(files)) {
+          emptyState.hidden = false;
+          return;
+        }
 
-          let icon = document.createElement("div");
-          icon.className = "file-icon";
+        files.forEach((file) => {
+          if (file.type === "dir") {
+            if (file.name === "assets") {
+              return;
+            }
 
-          let name = document.createElement("div");
-          name.className = "file-name";
-          name.innerText = file.name;
-
-          if (file.type === "file" && file.name.endsWith(".html")) {
-            a.href = file.path; // GitHub Pages atidarys HTML
-            icon.innerHTML = "📄";
-          }
-          else if (file.type === "dir") {
-            a.href = `?path=${file.path}`;
-            icon.innerHTML = "📁";
-          } else {
+            fileList.appendChild(createCard({
+              href: `?path=${encodeURIComponent(file.path)}`,
+              icon: "📁",
+              title: file.name,
+              copy: "Open this signature folder."
+            }));
             return;
           }
 
-          a.appendChild(icon);
-          a.appendChild(name);
-          list.appendChild(a);
+          if (file.type === "file" && file.name.endsWith(".html")) {
+            if (file.name === "index.html" || file.name === "configurator.html") {
+              return;
+            }
+
+            fileList.appendChild(createCard({
+              href: file.path,
+              icon: "📄",
+              title: file.name,
+              copy: "Open this HTML signature."
+            }));
+          }
         });
+
+        if (!fileList.children.length) {
+          emptyState.hidden = false;
+        }
+      })
+      .catch(() => {
+        if (currentPath) {
+          emptyState.hidden = false;
+        }
       });
   </script>
 </body>

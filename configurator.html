@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+  <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>JUNG Signature Configurator</title>
+  <script src="./auth.js"></script>
+  <style>
+    :root {
+      --bg: #eef2f3;
+      --sidebar: #0f2d33;
+      --sidebar-soft: #163942;
+      --surface: #ffffff;
+      --surface-soft: #f6f8f9;
+      --line: rgba(255,255,255,0.12);
+      --line-light: #dbe3e7;
+      --text: #0f1720;
+      --muted: #6b7882;
+      --jung: #1980A0;
+      --jung-dark: #0d566b;
+      --shadow: 0 24px 48px rgba(15, 23, 32, 0.08);
+      --radius: 18px;
+      --font: "IBM Plex Sans", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      scrollbar-gutter: stable;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #ecf1f2 0%, #e7eeef 100%);
+    }
+
+    body {
+      font-family: var(--font);
+      color: var(--text);
+    }
+
+    a { color: inherit; }
+
+    .app {
+      display: grid;
+      grid-template-columns: 420px minmax(0, 1fr);
+      align-items: start;
+      width: 100%;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #ecf1f2 0%, #e7eeef 100%);
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, var(--sidebar) 0%, var(--sidebar-soft) 100%);
+      color: #f3f7f8;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-copy {
+      margin: 6px 0 0;
+      color: rgba(243,247,248,0.72);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      text-decoration: none;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .mode-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .mode-button {
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: #f3f7f8;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .mode-button.active {
+      background: var(--jung);
+      border-color: transparent;
+    }
+
+    .mode-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .panel h2,
+    .panel h3 {
+      margin: 0 0 14px;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .language-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .language-card {
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: #f3f7f8;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .language-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.24);
+    }
+
+    .language-card.active {
+      background: #ffffff;
+      color: var(--text);
+      border-color: transparent;
+      box-shadow: 0 12px 24px rgba(15, 23, 32, 0.16);
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-label {
+      color: rgba(243,247,248,0.8);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .text-input,
+    .text-area,
+    .select-input {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      background: rgba(0,0,0,0.12);
+      color: #fff;
+      padding: 12px 13px;
+      font: inherit;
+      outline: none;
+    }
+
+    .select-input {
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .select-input option {
+      color: #0f1720;
+      background: #ffffff;
+    }
+
+    .text-input::placeholder,
+    .text-area::placeholder {
+      color: rgba(243,247,248,0.36);
+    }
+
+    .text-input:focus,
+    .text-area:focus,
+    .select-input:focus {
+      border-color: rgba(25,128,160,0.9);
+      box-shadow: 0 0 0 4px rgba(25,128,160,0.14);
+    }
+
+    .text-area {
+      resize: vertical;
+      min-height: 88px;
+    }
+
+    .checkbox-field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .switch {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .switch input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .switch-ui {
+      width: 50px;
+      height: 30px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      position: relative;
+      transition: background 0.18s ease;
+    }
+
+    .switch-ui::after {
+      content: "";
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      transition: transform 0.18s ease;
+    }
+
+    .switch input:checked + .switch-ui {
+      background: var(--jung);
+    }
+
+    .switch input:checked + .switch-ui::after {
+      transform: translateX(20px);
+    }
+
+    .advanced-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .advanced-block {
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 14px;
+    }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .social-row {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .social-name {
+      color: rgba(243,247,248,0.88);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .main {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      align-self: start;
+    }
+
+    .preview-shell {
+      flex: 1;
+      display: grid;
+      grid-template-rows: auto minmax(420px, 1fr);
+      background: #d9e4dc;
+      border-radius: 24px;
+      border: 1px solid #d1dce0;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .preview-top {
+      padding: 18px 22px;
+      background: #f7fafb;
+      border-bottom: 1px solid var(--line-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .preview-title {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .preview-copy {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .preview-frame-wrap {
+      padding: 24px;
+      height: 100%;
+    }
+
+    .preview-frame {
+      width: 100%;
+      min-height: 720px;
+      height: 100%;
+      border: 0;
+      border-radius: 18px;
+      background: #eef2f3;
+      box-shadow: 0 18px 40px rgba(15, 23, 32, 0.08);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .button {
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-primary {
+      background: var(--jung);
+      color: #fff;
+      box-shadow: 0 12px 22px rgba(25,128,160,0.22);
+    }
+
+    .button-secondary {
+      background: #fff;
+      color: var(--text);
+      border-color: var(--line-light);
+    }
+
+    .status {
+      color: var(--jung-dark);
+      font-size: 12px;
+      font-weight: 700;
+      min-height: 16px;
+    }
+
+    .hidden-output {
+      display: none;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 1100px) {
+      .app {
+        grid-template-columns: 1fr;
+        width: auto;
+        height: auto;
+        min-height: auto;
+      }
+
+      .sidebar {
+        padding-bottom: 10px;
+      }
+
+      .main {
+        position: static;
+        height: auto;
+        overflow: visible;
+      }
+
+      .preview-frame {
+        min-height: 520px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar,
+      .main {
+        padding: 16px;
+      }
+
+      .mode-row {
+        grid-template-columns: 1fr;
+      }
+
+      .preview-frame-wrap {
+        padding: 14px;
+      }
+
+      .preview-frame {
+        min-height: 440px;
+      }
+
+      .language-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .social-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div>
+          <h1 class="brand-title">JUNG Configurator</h1>
+          <p class="brand-copy">Minimal signature generator with live preview.</p>
+        </div>
+        <a class="back-link" href="index.html">← Back</a>
+      </div>
+
+      <div class="mode-row">
+        <button class="mode-button active" type="button" data-mode="basic">Basic</button>
+        <button class="mode-button" type="button" data-mode="advanced">Advanced</button>
+      </div>
+
+      <section class="panel">
+        <h2>Basic</h2>
+        <div id="basicPanel"></div>
+      </section>
+
+      <section class="panel" id="advancedPanel" hidden>
+        <h2>Advanced</h2>
+      </section>
+
+      <section class="panel">
+        <div class="toolbar">
+          <button class="button button-secondary" id="resetButton" type="button">Reset</button>
+          <span class="status" id="status"></span>
+        </div>
+      </section>
+    </aside>
+
+    <section class="main">
+      <div class="preview-shell">
+        <div class="preview-top">
+          <div>
+            <h2 class="preview-title">Preview</h2>
+            <p class="preview-copy">The signature updates instantly while you edit.</p>
+          </div>
+          <div class="toolbar">
+            <button class="button button-secondary" id="downloadButton" type="button">Download</button>
+            <button class="button button-primary" id="copyButton" type="button">Copy HTML</button>
+          </div>
+        </div>
+
+        <div class="preview-frame-wrap">
+          <iframe class="preview-frame" id="previewFrame" title="Signature preview"></iframe>
+        </div>
+      </div>
+      <textarea class="hidden-output" id="htmlOutput" readonly spellcheck="false"></textarea>
+    </section>
+  </main>
+
+  <script src="./configurator.js?v=20260518-29"></script>
+</body>
+</html>
