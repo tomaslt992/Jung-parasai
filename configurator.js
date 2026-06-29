@@ -398,8 +398,21 @@ function attachEvents() {
   });
 
   els.copyButton.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(els.htmlOutput.value);
-    setStatus("HTML copied.");
+    const signatureHtml = buildSectionsMarkup();
+    const signatureText = htmlFragmentToText(signatureHtml);
+
+    if (navigator.clipboard && window.ClipboardItem) {
+      const item = new ClipboardItem({
+        "text/html": new Blob([signatureHtml], { type: "text/html" }),
+        "text/plain": new Blob([signatureText], { type: "text/plain" })
+      });
+      await navigator.clipboard.write([item]);
+      setStatus("Signature copied.");
+      return;
+    }
+
+    await navigator.clipboard.writeText(signatureText);
+    setStatus("Signature copied as text.");
   });
 
   els.downloadButton.addEventListener("click", () => {
@@ -1056,6 +1069,12 @@ function htmlToPlainText(value) {
 
 function plainTextToHtml(value) {
   return escapeHtml(String(value || "")).replace(/\n/g, "<br>");
+}
+
+function htmlFragmentToText(value) {
+  const temp = document.createElement("div");
+  temp.innerHTML = value;
+  return temp.innerText.trim();
 }
 
 function setStatus(text) {
